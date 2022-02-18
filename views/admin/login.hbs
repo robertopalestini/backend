@@ -5,7 +5,17 @@
 
 {{#unless conocido}}
 <p>No te conozco</p>
-<form action="/ingresar" method="post">
-<input type="text" name="nombre"><button>Ingresar</button>
-</form>
 {{/unless}}
+<div clas="container">
+    <div class="row">
+        <form action="/admin/login" method="post">
+            <input type="text" class="form-control" placeholder="Usuario" name="usuario"/>
+            <input type="password" class="form-control" placeholder="Password" name="password"/>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+{{#if error}}
+<p>Usuario o clave incorrecta.</p>
+{{/if}}
+    </div>
+
+</div>

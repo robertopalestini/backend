@@ -5,9 +5,28 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 
+
+require('dotenv').config();
+var pool = require('./models/bd');
+
+secured = async(req,res,next) => {
+  try {
+    console.log(req.session.id_usuario);
+    if(req.session.id_usuario){
+      next();
+    } else {
+      res.redirect('/admin/login');
+    }
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/admin/login');
+var adminNovedadesRouter = require('./routes/admin/novedades')
 var app = express();
 
 // view engine setup
@@ -25,6 +44,10 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+// pool.query('Select * from empleados').then(function (resultados){
+//   console.log(resultados)
+// });
 
 app.get('/', function (req, res) {
   var conocido = Boolean(req.session.nombre);
@@ -51,6 +74,7 @@ app.get('/salir', function (req, res) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin/login', loginRouter);
+app.use('/admin/novedades',secured, adminNovedadesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
